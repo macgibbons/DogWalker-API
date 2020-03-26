@@ -14,5 +14,6 @@ namespace DogWalkerAPI.Models
         public string Phone { get; set; }
         public Neighborhood Neighborhood { get; set; }
 
+        public Dog dog { get; set; }
     }
 }
