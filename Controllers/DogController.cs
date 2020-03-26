@@ -140,69 +140,74 @@ namespace DogWalkerAPI.Controllers
 
         //////----------POST----------
 
-        //[HttpPost]
-        //public async Task<IActionResult> Post([FromBody] Dog dog)
-        //{
-        //    using (SqlConnection conn = Connection)
-        //    {
-        //        conn.Open();
-        //        using (SqlCommand cmd = conn.CreateCommand())
-        //        {
-        //            cmd.CommandText = @"
-        //                INSERT INTO Dog (Name, OwnerId)
-        //                OUTPUT INSERTED.Id
-        //                VALUES (@Name,  @OwnerId)";
-        //            cmd.Parameters.Add(new SqlParameter("@Name", dog.Name));
-        //            cmd.Parameters.Add(new SqlParameter("@OwnerId", dog.OwnerId));
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] Dog dog)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        INSERT INTO Dog (Name,  OwnerId, Breed, Notes`)
+                        OUTPUT INSERTED.Id
+                        VALUES (@Name,  @OwnerId, @Breed, @Notes)";
+                    cmd.Parameters.Add(new SqlParameter("@Name", dog.Name));
+                    cmd.Parameters.Add(new SqlParameter("@OwnerId", dog.OwnerId));
+                    cmd.Parameters.Add(new SqlParameter("@Breed", dog.Breed));
+                    cmd.Parameters.Add(new SqlParameter("@Notes", dog.Notes));
 
-        //            int id = (int)cmd.ExecuteScalar();
+                    int id = (int)cmd.ExecuteScalar();
 
-        //            dog.Id = id;
-        //            return CreatedAtRoute("GetDog", new { id = id }, dog);
-        //        }
-        //    }
-        //}
+                    dog.Id = id;
+                    return CreatedAtRoute("GetDog", new { id = id }, dog);
+                }
+            }
+        }
 
         //////----------PUT----------
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> Put([FromRoute] int id, [FromBody] Dog dog)
-        //{
-        //    try
-        //    {
-        //        using (SqlConnection conn = Connection)
-        //        {
-        //            conn.Open();
-        //            using (SqlCommand cmd = conn.CreateCommand())
-        //            {
-        //                cmd.CommandText = @"UPDATE Dog
-        //                             SET Name = @name, OwnerId = @neighborhoodId
-        //                             WHERE Id = @id";
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Put([FromRoute] int id, [FromBody] Dog dog)
+        {
+            try
+            {
+                using (SqlConnection conn = Connection)
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = @"UPDATE Dog
+                                     SET Name = @name, OwnerId = @ownerId, Breed = @breed, Notes = @notes
+                                     WHERE Id = @id";
 
-        //                cmd.Parameters.Add(new SqlParameter("@Name", dog.Name));
-        //                cmd.Parameters.Add(new SqlParameter("@neighborhoodId", dog.OwnerId));
-        //                cmd.Parameters.Add(new SqlParameter("@id", id));
+                        cmd.Parameters.Add(new SqlParameter("@Name", dog.Name));
+                        cmd.Parameters.Add(new SqlParameter("@ownerId", dog.OwnerId));
+                        cmd.Parameters.Add(new SqlParameter("@id", id));
+                        cmd.Parameters.Add(new SqlParameter("@breed", dog.Breed));
+                        cmd.Parameters.Add(new SqlParameter("@notes", dog.Notes));
 
-        //                int rowsAffected = cmd.ExecuteNonQuery();
-        //                if (rowsAffected > 0)
-        //                {
-        //                    return new StatusCodeResult(StatusCodes.Status204NoContent);
-        //                }
-        //                throw new Exception("No rows affected");
-        //            }
-        //        }
-        //    }
-        //    catch (Exception)
-        //    {
-        //        if (!DogExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
-        //}
+
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                        if (rowsAffected > 0)
+                        {
+                            return new StatusCodeResult(StatusCodes.Status204NoContent);
+                        }
+                        throw new Exception("No rows affected");
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                if (!DogExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+        }
 
         //////----------DELETE----------
 
@@ -241,23 +246,23 @@ namespace DogWalkerAPI.Controllers
         //    }
         //}
 
-        //private bool DogExists(int id)
-        //{
-        //    using (SqlConnection conn = Connection)
-        //    {
-        //        conn.Open();
-        //        using (SqlCommand cmd = conn.CreateCommand())
-        //        {
-        //            cmd.CommandText = @"
-        //                SELECT Id, Name, OwnerId
-        //                FROM Dog
-        //                WHERE Id = @id";
-        //            cmd.Parameters.Add(new SqlParameter("@id", id));
+        private bool DogExists(int id)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        SELECT Id, Name
+                        FROM Dog
+                        WHERE Id = @id";
+                    cmd.Parameters.Add(new SqlParameter("@id", id));
 
-        //            SqlDataReader reader = cmd.ExecuteReader();
-        //            return reader.Read();
-        //        }
-        //    }
-        //}
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    return reader.Read();
+                }
+            }
+        }
     }
 }
