@@ -72,119 +72,116 @@ namespace DogWalkerAPI.Controllers
             }
         }
 
-        ////----------GET by Id----------
-        //[HttpGet("{id}", Name = "GetWalker")]
-        //public async Task<IActionResult> Get([FromRoute] int id)
-        //{
-        //    using (SqlConnection conn = Connection)
-        //    {
-        //        conn.Open();
-        //        using (SqlCommand cmd = conn.CreateCommand())
-        //        {
-        //            cmd.CommandText = @"SELECT e.Id, e.FirstName, e.LastName, e.DepartmentId, d.Id, d.DeptName
-        //                FROM Walker e
-        //                LEFT JOIN Department d
-        //                ON e.DepartmentId = d.Id
-        //                WHERE e.Id = @id";
-        //            cmd.Parameters.Add(new SqlParameter("@id", id));
-        //            SqlDataReader reader = cmd.ExecuteReader();
+        //----------GET by Id----------
+        [HttpGet("{id}", Name = "GetWalker")]
+        public async Task<IActionResult> Get([FromRoute] int id)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"SELECT w.Id, w.Name, w.NeighborhoodId, n.Id, n.Name AS NeighborhoodName
+                        FROM Walker w
+                        LEFT JOIN Neighborhood n
+                        ON w.NeighborhoodId = n.Id
+                        WHERE w.Id = @id";
+                    cmd.Parameters.Add(new SqlParameter("@id", id));
+                    SqlDataReader reader = cmd.ExecuteReader();
 
-        //            Walker walker = null;
+                    Walker walker = null;
 
-        //            if (reader.Read())
-        //            {
-        //                walker = new Walker
-        //                {
-        //                    Id = reader.GetInt32(reader.GetOrdinal("Id")),
-        //                    FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
-        //                    LastName = reader.GetString(reader.GetOrdinal("LastName")),
+                    if (reader.Read())
+                    {
+                        walker = new Walker()
+                        {
 
-        //                    DepartmentId = reader.GetInt32(reader.GetOrdinal("DepartmentId")),
-        //                    Department = new Department
-        //                    {
-        //                        Id = reader.GetInt32(reader.GetOrdinal("DepartmentId")),
-        //                        DeptName = reader.GetString(reader.GetOrdinal("DeptName"))
-        //                    }
-        //                };
-        //                reader.Close();
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            Name = reader.GetString(reader.GetOrdinal("Name")),
+                            NeighborhoodId = reader.GetInt32(reader.GetOrdinal("NeighborhoodId")),
+                            Neighborhood = new Neighborhood()
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("NeighborhoodId")),
+                                Name = reader.GetString(reader.GetOrdinal("NeighborhoodName"))
+                            }
+                        };
+                        reader.Close();
 
-        //                return Ok(walker);
-        //            }
-        //            else
-        //            {
-        //                return NotFound();
-        //            }
-        //        }
-        //    }
-        //}
+                        return Ok(walker);
+                    }
+                    else
+                    {
+                        return NotFound();
+                    }
+                }
+            }
+        }
 
         ////----------POST----------
 
-        //[HttpPost]
-        //public async Task<IActionResult> Post([FromBody] Walker walker)
-        //{
-        //    using (SqlConnection conn = Connection)
-        //    {
-        //        conn.Open();
-        //        using (SqlCommand cmd = conn.CreateCommand())
-        //        {
-        //            cmd.CommandText = @"
-        //                INSERT INTO Walker (FirstName, LastName, DepartmentId)
-        //                OUTPUT INSERTED.Id
-        //                VALUES (@firstName, @lastName, @departmentId)";
-        //            cmd.Parameters.Add(new SqlParameter("@firstName", walker.FirstName));
-        //            cmd.Parameters.Add(new SqlParameter("@lastName", walker.LastName));
-        //            cmd.Parameters.Add(new SqlParameter("@DepartmentId", walker.DepartmentId));
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] Walker walker)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        INSERT INTO Walker (Name, NeighborhoodId)
+                        OUTPUT INSERTED.Id
+                        VALUES (@Name,  @NeighborhoodId)";
+                    cmd.Parameters.Add(new SqlParameter("@Name", walker.Name));
+                    cmd.Parameters.Add(new SqlParameter("@NeighborhoodId", walker.NeighborhoodId));
 
-        //            int id = (int)cmd.ExecuteScalar();
+                    int id = (int)cmd.ExecuteScalar();
 
-        //            walker.Id = id;
-        //            return CreatedAtRoute("GetWalker", new { id = id }, walker);
-        //        }
-        //    }
-        //}
+                    walker.Id = id;
+                    return CreatedAtRoute("GetWalker", new { id = id }, walker);
+                }
+            }
+        }
 
         ////----------PUT----------
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> Put([FromRoute] int id, [FromBody] Walker walker)
-        //{
-        //    try
-        //    {
-        //        using (SqlConnection conn = Connection)
-        //        {
-        //            conn.Open();
-        //            using (SqlCommand cmd = conn.CreateCommand())
-        //            {
-        //                cmd.CommandText = @"UPDATE Walker
-        //                             SET FirstName = @firstName, LastName = @lastName, DepartmentId = @departmentId
-        //                             WHERE Id = @id";
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Put([FromRoute] int id, [FromBody] Walker walker)
+        {
+            try
+            {
+                using (SqlConnection conn = Connection)
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = @"UPDATE Walker
+                                     SET Name = @name, NeighborhoodId = @neighborhoodId
+                                     WHERE Id = @id";
 
-        //                cmd.Parameters.Add(new SqlParameter("@firstName", walker.FirstName));
-        //                cmd.Parameters.Add(new SqlParameter("@lastName", walker.LastName));
-        //                cmd.Parameters.Add(new SqlParameter("@departmentId", walker.DepartmentId));
-        //                cmd.Parameters.Add(new SqlParameter("@id", id));
+                        cmd.Parameters.Add(new SqlParameter("@Name", walker.Name));
+                        cmd.Parameters.Add(new SqlParameter("@neighborhoodId", walker.NeighborhoodId));
+                        cmd.Parameters.Add(new SqlParameter("@id", id));
 
-        //                int rowsAffected = cmd.ExecuteNonQuery();
-        //                if (rowsAffected > 0)
-        //                {
-        //                    return new StatusCodeResult(StatusCodes.Status204NoContent);
-        //                }
-        //                throw new Exception("No rows affected");
-        //            }
-        //        }
-        //    }
-        //    catch (Exception)
-        //    {
-        //        if (!WalkerExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
-        //}
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                        if (rowsAffected > 0)
+                        {
+                            return new StatusCodeResult(StatusCodes.Status204NoContent);
+                        }
+                        throw new Exception("No rows affected");
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                if (!WalkerExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+        }
 
         ////----------DELETE----------
 
@@ -223,23 +220,23 @@ namespace DogWalkerAPI.Controllers
         //    }
         //}
 
-        //private bool WalkerExists(int id)
-        //{
-        //    using (SqlConnection conn = Connection)
-        //    {
-        //        conn.Open();
-        //        using (SqlCommand cmd = conn.CreateCommand())
-        //        {
-        //            cmd.CommandText = @"
-        //                SELECT Id, firstName, lastName,departmentId
-        //                FROM Walker
-        //                WHERE Id = @id";
-        //            cmd.Parameters.Add(new SqlParameter("@id", id));
+        private bool WalkerExists(int id)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        SELECT Id, Name, NeighborhoodId
+                        FROM Walker
+                        WHERE Id = @id";
+                    cmd.Parameters.Add(new SqlParameter("@id", id));
 
-        //            SqlDataReader reader = cmd.ExecuteReader();
-        //            return reader.Read();
-        //        }
-        //    }
-        //}
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    return reader.Read();
+                }
+            }
+        }
     }
 }
