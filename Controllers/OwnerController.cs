@@ -31,7 +31,8 @@ namespace DogWalkerAPI.Controllers
         // ----------Get all----------
         [HttpGet]
         public async Task<IActionResult> Get(
-            [FromQuery] string include)
+            [FromQuery] string include,
+            [FromQuery] string name)
         {
             using (SqlConnection conn = Connection)
             {
@@ -48,7 +49,12 @@ namespace DogWalkerAPI.Controllers
                                            ON o.NeighborhoodId = n.Id
                                            SELECT n.[Name] as NeighborhoodName
                                            From Neighborhood n";
-                      
+                        if (name != null)
+                        {
+                            cmd.CommandText += " WHERE Name LIKE @name";
+                            cmd.Parameters.Add(new SqlParameter("@name", "%" + name + "%"));
+                        }
+
 
                         SqlDataReader reader = cmd.ExecuteReader();
 
@@ -80,10 +86,19 @@ namespace DogWalkerAPI.Controllers
                     return Ok(allOwners);
                     } else
                     {
+                        
                         cmd.CommandText = @"
                         SELECT o.Id, o.[Name], o.Address, o.Phone, o.NeighborhoodId
                         FROM OWNER o 
+   
                         ";
+
+                        if (name != null)
+                        {
+                            cmd.CommandText += " WHERE Name LIKE @name";
+                            cmd.Parameters.Add(new SqlParameter("@name", "%" + name + "%"));
+                        }
+
 
                         SqlDataReader reader = cmd.ExecuteReader();
 
