@@ -45,6 +45,7 @@ namespace DogWalkerAPI.Controllers
                         FROM Walker w
                         LEFT JOIN Neighborhood n
                         ON w.NeighborhoodId = n.Id";
+
                     if (neighborhoodId != null)
                     {
                         cmd.CommandText += " WHERE w.NeighborhoodId = @neighborhoodID";
