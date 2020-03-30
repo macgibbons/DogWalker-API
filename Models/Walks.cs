@@ -13,5 +13,7 @@ namespace DogWalkerAPI.Models
         public int WalkerId { get; set; }
         public int DogId { get; set; }
 
+        public Walker walker { get; set; }
+        public Dog dog { get; set; }
     }
 }
