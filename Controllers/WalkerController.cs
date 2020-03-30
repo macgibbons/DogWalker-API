@@ -32,7 +32,8 @@ namespace DogWalkerAPI.Controllers
         // ----------Get all----------
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get(
+            [FromQuery] int? neighborhoodId)
         {
             using (SqlConnection conn = Connection)
             {
@@ -44,6 +45,11 @@ namespace DogWalkerAPI.Controllers
                         FROM Walker w
                         LEFT JOIN Neighborhood n
                         ON w.NeighborhoodId = n.Id";
+                    if (neighborhoodId != null)
+                    {
+                        cmd.CommandText += " WHERE w.NeighborhoodId = @neighborhoodID";
+                        cmd.Parameters.Add(new SqlParameter("neighborhoodID", neighborhoodId));
+                    }
 
                     SqlDataReader reader = cmd.ExecuteReader();
 
