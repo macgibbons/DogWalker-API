@@ -30,19 +30,27 @@ namespace DogWalkerAPI.Controllers
 
         // ----------Get all----------
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get(
+            [FromQuery] string include)
         {
             using (SqlConnection conn = Connection)
             {
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"
-                        SELECT o.Id, o.[Name], o.Address, o.Phone, o.NeighborhoodId 
-                        FROM OWNER o 
-                        ";
+                    
+                    if (include == "neighborhood")
+                    {
+                        cmd.CommandText += @" 
+                                           SELECT o.Id, o.[Name], o.Address, o.Phone, o.NeighborhoodId, n.Name as Neighborhoodname, n.Id
+                                           FROM OWNER o 
+                                           LEFT JOIN Neighborhood n
+                                           ON o.NeighborhoodId = n.Id
+                                           SELECT n.[Name] as NeighborhoodName
+                                           From Neighborhood n";
+                      
 
-                    SqlDataReader reader = cmd.ExecuteReader();
+                        SqlDataReader reader = cmd.ExecuteReader();
 
                     List<Owner> allOwners = new List<Owner>();
 
@@ -56,7 +64,13 @@ namespace DogWalkerAPI.Controllers
                             Address = reader.GetString(reader.GetOrdinal("Address")),
                             Phone = reader.GetString(reader.GetOrdinal("Phone")),
                             NeighborhoodId = reader.GetInt32(reader.GetOrdinal("NeighborhoodId")),
-                            
+                            Neighborhood = new Neighborhood()
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("NeighborhoodId")),
+                                Name = reader.GetString(reader.GetOrdinal("NeighborhoodName"))
+
+                            },
+
                         };
 
                         allOwners.Add(owner);
@@ -64,6 +78,35 @@ namespace DogWalkerAPI.Controllers
                     reader.Close();
 
                     return Ok(allOwners);
+                    } else
+                    {
+                        cmd.CommandText = @"
+                        SELECT o.Id, o.[Name], o.Address, o.Phone, o.NeighborhoodId
+                        FROM OWNER o 
+                        ";
+
+                        SqlDataReader reader = cmd.ExecuteReader();
+
+                        List<Owner> allOwners = new List<Owner>();
+
+                        while (reader.Read())
+                        {
+                            var owner = new Owner()
+                            {
+
+                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                                Name = reader.GetString(reader.GetOrdinal("Name")),
+                                Address = reader.GetString(reader.GetOrdinal("Address")),
+                                Phone = reader.GetString(reader.GetOrdinal("Phone")),
+                                NeighborhoodId = reader.GetInt32(reader.GetOrdinal("NeighborhoodId")),
+                            };
+
+                            allOwners.Add(owner);
+                        }
+                        reader.Close();
+
+                        return Ok(allOwners);
+                    }
                 }
             }
         }
