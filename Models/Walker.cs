@@ -10,6 +10,7 @@ namespace DogWalkerAPI.Models
     {
         public int Id { get; set; }
         [Required]
+        [StringLength(40, MinimumLength = 2, ErrorMessage = "Walker name must be between 2 and 40 characters")]
         public string Name { get; set; }
         [Required]
         public int NeighborhoodId { get; set; }
