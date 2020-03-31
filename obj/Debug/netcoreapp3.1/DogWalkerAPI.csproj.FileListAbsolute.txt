@@ -106,8 +106,13 @@ C:\Users\Mac Gibbons\source\repos\DogWalkerAPI\DogWalkerAPI\bin\Debug\netcoreapp
 C:\Users\Mac Gibbons\source\repos\DogWalkerAPI\DogWalkerAPI\bin\Debug\netcoreapp3.1\tr\Microsoft.CodeAnalysis.Workspaces.resources.dll
 C:\Users\Mac Gibbons\source\repos\DogWalkerAPI\DogWalkerAPI\bin\Debug\netcoreapp3.1\zh-Hans\Microsoft.CodeAnalysis.Workspaces.resources.dll
 C:\Users\Mac Gibbons\source\repos\DogWalkerAPI\DogWalkerAPI\bin\Debug\netcoreapp3.1\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:\Users\Mac Gibbons\source\repos\DogWalkerAPI\DogWalkerAPI\obj\Debug\netcoreapp3.1\DogWalkerAPI.csproj.CoreCompileInputs.cache
-C:\Users\Mac Gibbons\source\repos\DogWalkerAPI\DogWalkerAPI\obj\Debug\netcoreapp3.1\DogWalkerAPI.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\Mac Gibbons\source\repos\DogWalkerAPI\DogWalkerAPI\obj\Debug\netcoreapp3.1\DogWalkerAPI.dll
 C:\Users\Mac Gibbons\source\repos\DogWalkerAPI\DogWalkerAPI\obj\Debug\netcoreapp3.1\DogWalkerAPI.pdb
 C:\Users\Mac Gibbons\source\repos\DogWalkerAPI\DogWalkerAPI\obj\Debug\netcoreapp3.1\DogWalkerAPI.genruntimeconfig.cache
+C:\Users\Mac Gibbons\source\repos\DogWalkerAPI\DogWalkerAPI\bin\Debug\netcoreapp3.1\Microsoft.OpenApi.dll
+C:\Users\Mac Gibbons\source\repos\DogWalkerAPI\DogWalkerAPI\bin\Debug\netcoreapp3.1\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\Mac Gibbons\source\repos\DogWalkerAPI\DogWalkerAPI\bin\Debug\netcoreapp3.1\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\Mac Gibbons\source\repos\DogWalkerAPI\DogWalkerAPI\bin\Debug\netcoreapp3.1\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\Mac Gibbons\source\repos\DogWalkerAPI\DogWalkerAPI\obj\Debug\netcoreapp3.1\DogWalkerAPI.csproj.CoreCompileInputs.cache
+C:\Users\Mac Gibbons\source\repos\DogWalkerAPI\DogWalkerAPI\obj\Debug\netcoreapp3.1\DogWalkerAPI.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\Mac Gibbons\source\repos\DogWalkerAPI\DogWalkerAPI\obj\Debug\netcoreapp3.1\DogWalkerAPI.MvcApplicationPartsAssemblyInfo.cache
